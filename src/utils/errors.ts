@@ -8,6 +8,7 @@ export const USER_PROFILE_ACCESS_ERROR =
 export const WISH_NOT_FOUND_ERROR = 'Такого подарка не существует';
 export const WISH_UPDATE_ERROR =
   'Редактирование подарка невозможно: есть желающие скинуться';
+export const WISH_COPY_ERROR = 'Вы уже скопировали данный подарок';
 export const WISH_ACCESS_ERROR =
   'Редактирование/удаление чужих подарков невозможно';
 export const LARGE_AMOUNT_ERROR =

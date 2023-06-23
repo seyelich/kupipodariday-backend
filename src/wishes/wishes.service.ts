@@ -16,15 +16,18 @@ import {
 import { User } from 'src/users/entities/user.entity';
 import {
   WISH_ACCESS_ERROR,
+  WISH_COPY_ERROR,
   WISH_NOT_FOUND_ERROR,
   WISH_UPDATE_ERROR,
 } from '../utils/errors';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class WishesService {
   constructor(
     @InjectRepository(Wish)
     private wishesRepository: Repository<Wish>,
+    private usersService: UsersService,
   ) {}
 
   create(createWishDto: CreateWishDto, owner: User) {
@@ -58,7 +61,21 @@ export class WishesService {
       relations: ['owner'],
     });
 
+    const userWishes = await this.usersService.findUserWishes({ id: user.id });
     const { name, link, image, price, description } = wish;
+
+    if (
+      userWishes.find(
+        (el) =>
+          el.name === name &&
+          el.link === link &&
+          el.image === image &&
+          el.price === price &&
+          el.description === description,
+      )
+    ) {
+      throw new BadRequestException(WISH_COPY_ERROR);
+    }
 
     const updatedWish = { ...wish, copied: wish.copied + 1 };
     const newWish = await this.create(

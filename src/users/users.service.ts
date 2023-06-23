@@ -10,6 +10,7 @@ import { User } from './entities/user.entity';
 import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { HashService } from 'src/hash/hash.service';
 import {
+  USER_EXIST_ERROR,
   USER_NOT_FOUND_ERROR,
   USER_PROFILE_ACCESS_ERROR,
 } from '../utils/errors';
@@ -76,6 +77,22 @@ export class UsersService {
       );
     }
 
+    if (updateUserDto.email && updateUserDto.email !== user.email) {
+      const foundUserByEmail = await this.findByEmail(updateUserDto.email);
+
+      if (foundUserByEmail) {
+        throw new BadRequestException(USER_EXIST_ERROR);
+      }
+    }
+
+    if (updateUserDto.username && updateUserDto.username !== user.username) {
+      const foundUserByName = await this.findByUsername(updateUserDto.email);
+
+      if (foundUserByName) {
+        throw new BadRequestException(USER_EXIST_ERROR);
+      }
+    }
+
     return this.usersRepository.update(query, updateUserDto);
   }
 
@@ -83,7 +100,7 @@ export class UsersService {
     const { wishes } = await this.findOne({
       where: query,
       select: ['wishes'],
-      relations: ['wishes', 'wishes.owner', 'wishes.offers'],
+      relations: ['wishes'],
     });
 
     return wishes;
