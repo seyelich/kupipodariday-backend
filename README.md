@@ -5,7 +5,7 @@
 
 **Функционал**: авторизация, создание базы данных пользователей, обновление/удаление профиля, валидация данных.
 
-**Стэк**: TypeScript, PostgreSQL, Nest.js, TypeORM, Docker, Docker-compose.
+**Стэк**: TypeScript, PostgreSQL, Nest.js, TypeORM.
 
 ## Запуск
 ```
